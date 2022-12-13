@@ -46,3 +46,22 @@
     color: var(--black-hover);
     border-bottom: 2px solid var(--black-hover);
 }
+
+
+
+figure {
+    width: 600px;
+    background-repeat: no-repeat;
+  }
+  
+  figure:hover img {
+    opacity: 0;
+  }
+  
+  img {
+    display: block;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  

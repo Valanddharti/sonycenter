@@ -12,15 +12,31 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // import 'swiper/css/scrollbar';
 import { Navigation } from "swiper";
 
+// state = {
+//   backgroundImage: `url(${src})`,
+//   backgroundPosition: '0% 0%'
+// }
+
+// handleMouseMove = e => {
+//   const { left, top, width, height } = e.target.getBoundingClientRect()
+//   const x = (e.pageX - left) / width * 100
+//   const y = (e.pageY - top) / height * 100
+//   this.setState({ backgroundPosition: `${x}% ${y}%` })
+// }
+
 export function ProductSlider({media, className}) {
+
+    
+  
     if (!media.length) {
       return null;
     }
-
+  
     return (
       <div
         className={`md:grid-flow-row hiddenScroll md:p-0 md:overflow-x-auto md:grid-cols-2 ${className}`}
       >
+    {/* <figure onMouseMove={this.handleMouseMove} style={this.state}> */}
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -30,6 +46,7 @@ export function ProductSlider({media, className}) {
         modules={[Navigation]}
         className="mySwiper"
       >
+     
         {media.map((med, i) => {
           let mediaProps = {};
           const isFirst = i === 0;
@@ -86,8 +103,9 @@ export function ProductSlider({media, className}) {
             'aspect-square snap-center card-image bg-white dark:bg-contrast/10 w-mobileGallery md:w-full',
           ].join(' ');
           return (
-      
-          <SwiperSlide>
+         
+          <SwiperSlide> 
+           
             <div
                 className={style}
                 // @ts-ignore
@@ -110,10 +128,14 @@ export function ProductSlider({media, className}) {
                   {...mediaProps}
                 />
             </div>
+          
           </SwiperSlide>
+           
             );
-          })}
+          })} 
+        
         </Swiper>
+    {/* </figure> */}
       </div>
     );  
 }
