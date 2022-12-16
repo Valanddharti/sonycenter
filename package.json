@@ -42,10 +42,9 @@
     "imagezoomjs": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-responsive-carousel": "^3.2.23",
     "react-scroll": "^1.8.9",
-    "react-slick": "^0.29.0",
     "react-use": "^17.4.0",
-    "swiper": "^8.4.5",
     "typographic-base": "^1.0.4"
   },
   "author": "Jaimin-PC"

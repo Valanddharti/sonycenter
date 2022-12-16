@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, { useRef, useState ,Suspense} from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
+import  {Suspense} from "react";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation } from "swiper";
 import {
   gql,
   ProductOptionsProvider,
@@ -9,7 +9,6 @@ import {
   ShopifyAnalyticsConstants,
   useLocalization,
   useServerAnalytics,
-  Metafield,
   useShopQuery,
   Link,
 } from '@shopify/hydrogen';
@@ -48,10 +47,7 @@ export default function Product({params}) {
     },
     preload: true,
   });
-//  console.log("data",product.Feature.value);
-
-
-
+ 
   if (!product) {
     return <NotFound type="product" />;
   }
@@ -83,7 +79,6 @@ export default function Product({params}) {
       ],
     },
   });
-
   return (
     <Layout>
        <Suspense>
