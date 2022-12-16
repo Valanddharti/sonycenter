@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, { useRef, useState ,Suspense} from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
-
+import  {Suspense} from "react";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation } from "swiper";
 import {
   gql,
   ProductOptionsProvider,
@@ -10,7 +9,6 @@ import {
   ShopifyAnalyticsConstants,
   useLocalization,
   useServerAnalytics,
-  Metafield,
   useShopQuery,
   Link,
 } from '@shopify/hydrogen';
@@ -49,8 +47,7 @@ export default function Product({params}) {
     },
     preload: true,
   });
-//  console.log("data",product.Feature.value);
-
+ 
   if (!product) {
     return <NotFound type="product" />;
   }
@@ -82,7 +79,6 @@ export default function Product({params}) {
       ],
     },
   });
-
   return (
     <Layout>
        <Suspense>
@@ -138,14 +134,10 @@ export default function Product({params}) {
               <div className='container mx-auto inline-grid gap-4'>
                 <ul className='main_set main-list-of-items product-tab-section'>
                   <li>
-                    <a href="http://" className='active details-section active1'>Details</a>
+                    <a href='#ProductDetail' className='active details-section active1'>Details</a>
                   </li>
                   <li>
-                    {/* <a href='ProductDetail.client' className='active details-section'>Feature</a> */}
-                    <Link spy={true} smooth={true} offset={-70} 
-                      duration={1000} to="#ProductDetail.client"className='active details-section'>
-                      Feature
-                    </Link>
+                    <a href='#Feature' className='active details-section'>Feature</a>
                   </li>
                   <li>
                     <a href="http://" className='active details-section'>Reviews</a>
@@ -158,31 +150,33 @@ export default function Product({params}) {
                   </li>
                   
                 </ul>
-                <div className='product-main'>
+                <div className='product-main' id="ProductDetail">
                   <div className="product-tab-block">
-                    <ProductDetail  
+                    <ProductDetail 
                       content={descriptionHtml}>
                     </ProductDetail>
                   </div>
                 </div>
-              </div> 
-         
-              <div className='product-main'>
+                <div className='product-main' id="Feature">
                   <div className="product-tab-block">
-                  <div
-                    className="dark:prose-invert"
-                    dangerouslySetInnerHTML={{__html: product?.Feature?.value}}
-                  />
-                    </div>
-                    </div>
+                    <div
+                      className="dark:prose-invert"
+                      dangerouslySetInnerHTML={{__html: product?.Feature?.value}}
+                    />
+                  </div>
+                </div>
+              </div> 
         </Section>
         <Suspense>
           <ProductSwimlane title="Related Products" data={id} />
         </Suspense>
+        
       </ProductOptionsProvider>   
       <Suspense>
         <Seo type="product" data={product} />
       </Suspense>  
+
+     
     </Layout>
   );
 }

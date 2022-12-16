@@ -1,36 +1,73 @@
-/* eslint-disable prettier/prettier */
+import { Carousel } from 'react-responsive-carousel';
+import { ReactDOM } from 'react';
+import react from 'react';
 import {MediaFile} from '@shopify/hydrogen/client';
 import {ATTR_LOADING_EAGER} from '~/lib/const';
-// import React, { useRef, useState } from "react";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import {
+  useShopQuery,
+  gql,
+} from '@shopify/hydrogen';
+import {MEDIA_FRAGMENT} from '~/lib/fragments';
 
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import { Pagination } from "swiper";
-import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// import 'swiper/css/scrollbar';
-import { Navigation } from "swiper";
-
-export function ProductSlider({media, className}) {
+export function ProductSlider({className,params}) {
+  const {handle} = params;
+  
     if (!media.length) {
       return null;
     }
-
+    const {
+      data: {product, shop},
+    } = useShopQuery({
+      query: PRODUCT_QUERY,
+      variables: {
+        country: countryCode,
+        language: languageCode,
+        handle,
+      },
+      preload: true,
+    });
+    if (!product) {
+      return <NotFound type="product" />;
+    }
+    const {title, vendor, descriptionHtml, id, productType} = product;
+    const {
+      priceV2,
+      id: variantId,
+      sku,
+      title: variantTitle,
+    } = product.variants.nodes[0];
+    useServerAnalytics({
+      shopify: {
+        canonicalPath: `/products/${handle}`,
+        pageType: ShopifyAnalyticsConstants.pageType.product,
+        resourceId: product.id,
+        products: [
+          {
+            product_gid: product.id,
+            variant_gid: variantId,
+            variant: variantTitle,
+            name: title,
+            brand: vendor,
+            category: productType,
+            price: priceV2.amount,
+            sku,
+          },
+        ],
+      },
+    });
     return (
       <div
         className={`md:grid-flow-row hiddenScroll md:p-0 md:overflow-x-auto md:grid-cols-2 ${className}`}
       >
-      <Swiper
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={swiper => console.log(swiper)}
-        navigation={true}
-        modules={[Navigation]}
-        className="mySwiper"
-      >
-        {media.map((med, i) => {
+        
+        <Carousel>
+        <img src="assets/2.jpeg" />
+        <img src="assets/2.jpeg" />
+        <img src="assets/2.jpeg" />
+        <img src="assets/2.jpeg" />
+        
+         {media.map((med, i) => {
           let mediaProps = {};
           const isFirst = i === 0;
           const isFourth = i === 3;
@@ -85,9 +122,8 @@ export function ProductSlider({media, className}) {
             isFirst || isFourth ? '' : 'md:aspect-[4/5]',
             'aspect-square snap-center card-image bg-white dark:bg-contrast/10 w-mobileGallery md:w-full',
           ].join(' ');
+
           return (
-      
-          <SwiperSlide>
             <div
                 className={style}
                 // @ts-ignore
@@ -110,11 +146,84 @@ export function ProductSlider({media, className}) {
                   {...mediaProps}
                 />
             </div>
-          </SwiperSlide>
-            );
+           );
+           
           })}
-        </Swiper>
+           
+        </Carousel>
+       
+   
       </div>
     );  
 }
-   
+const PRODUCT_QUERY = gql`
+${MEDIA_FRAGMENT}
+query Product(
+  $country: CountryCode
+  $language: LanguageCode
+  $handle: String!
+) @inContext(country: $country, language: $language) {
+  product(handle: $handle) {
+    id
+    title
+    vendor
+    descriptionHtml
+    
+    media(first: 7) {
+      nodes {
+        ...Media
+      }
+    }
+    Feature: metafield(namespace: "custom", key: "feature") {
+      value
+    }
+    productType
+    variants(first: 100) {
+      nodes {
+        id
+        availableForSale
+        selectedOptions {
+          name
+          value
+        }
+       
+        image {
+          id
+          url
+          altText
+          width
+          height
+        }
+        priceV2 {
+          amount
+          currencyCode
+        }
+        compareAtPriceV2 {
+          amount
+          currencyCode
+        }
+        sku
+        title
+        unitPrice {
+          amount
+          currencyCode
+        }
+      }
+    }
+    seo {
+      description
+      title
+    }
+  }
+  shop {
+    shippingPolicy {
+      body
+      handle
+    }
+    refundPolicy {
+      body
+      handle
+    }
+  }
+}
+`;
